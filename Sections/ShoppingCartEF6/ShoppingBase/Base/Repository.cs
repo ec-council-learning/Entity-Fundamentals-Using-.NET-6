@@ -82,9 +82,9 @@ namespace ShoppingBase.Base
             return _context.Set<TEntity>().Find(id);
         }
 
-        public ValueTask<TEntity> GetByIdAsync(int id)
+        public async ValueTask<TEntity> GetByIdAsync(int id)
         {
-            return _context.Set<TEntity>().FindAsync(id);
+            return await _context.Set<TEntity>().FindAsync(id);
         }
 
         public void Remove(TEntity entity)
@@ -166,5 +166,29 @@ namespace ShoppingBase.Base
         }
 
 
+
+        public IEnumerable<TEntity> GetPage(Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderby, int page, int pageSize)
+        {
+            var query = _context.Set<TEntity>();
+
+            return orderby(query).Skip(page * pageSize).Take(pageSize).ToList();
+        }
+
+        public async Task<IEnumerable<TEntity>> GetPageAsync(Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderby, int page, int pageSize)
+        {
+            var query = _context.Set<TEntity>();
+
+            return await orderby(query).Skip(page * pageSize).Take(pageSize).ToListAsync();
+        }
+
+        public IEnumerable<TEntity> GetPage(int page, int pageSize)
+        {
+            return _context.Set<TEntity>().Skip(page * pageSize).Take(pageSize).ToList();
+        }
+
+        public async Task<IEnumerable<TEntity>> GetPageAsync(int page, int pageSize)
+        {
+            return await _context.Set<TEntity>().Skip(page * pageSize).Take(pageSize).ToListAsync();
+        }
     }
 }

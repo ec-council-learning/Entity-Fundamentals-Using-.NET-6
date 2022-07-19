@@ -36,7 +36,7 @@ namespace ShoppingCartEF2.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
              => options
-                .UseSqlServer(_connectionString, b => b.MigrationsAssembly("ShoppingCartMigrations6"))
+                .UseSqlServer(_connectionString, b => { b.MigrationsAssembly("ShoppingCartMigrations6"); })
                 .ReplaceService<IMigrationsSqlGenerator, ShoppingMigrationSqlGenerator>();
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)

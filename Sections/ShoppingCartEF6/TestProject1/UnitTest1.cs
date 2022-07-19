@@ -59,6 +59,17 @@ namespace TestProject1
         }
 
         [TestMethod]
+        public void GetPageCustomerTest()
+        {
+            var context = CreateDbContext();
+            var customerRepo = new CustomerRepository(context);
+            var customers = customerRepo.GetPage(2, 10);
+
+            Assert.IsNotNull(customers);
+            Assert.IsTrue(customers.Count() > 0);
+        }
+
+        [TestMethod]
         public void FindCustomerTest()
         {
             var context = CreateDbContext();
@@ -67,6 +78,20 @@ namespace TestProject1
             Assert.IsNotNull(customers);
 
             foreach(var cust in customers)
+            {
+
+            }
+        }
+
+        [TestMethod]
+        public void FindCustomersWhoBorrowedBookTest()
+        {
+            var context = CreateDbContext();
+            var customerRepo = new CustomerRepository(context);
+            var customers = customerRepo.CustomersWhoBorrowedBook("Book1");
+            Assert.IsNotNull(customers);
+
+            foreach (var cust in customers)
             {
 
             }

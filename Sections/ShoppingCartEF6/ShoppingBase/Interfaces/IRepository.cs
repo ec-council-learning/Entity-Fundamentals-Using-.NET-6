@@ -26,6 +26,9 @@ namespace ShoppingBase.Interfaces
         ValueTask<TEntity> GetByIdAsync(int id);
         TEntity GetById(int id);
 
+        IEnumerable<TEntity> GetPage(int page, int pageSize);
+        Task<IEnumerable<TEntity>> GetPageAsync(int page, int pageSize);
+
         void Remove(TEntity entity);
         TEntity Update(TEntity entity);
 
@@ -40,6 +43,10 @@ namespace ShoppingBase.Interfaces
                        Expression<Func<TEntity, bool>> filter = null,
                        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
                        string includeProperties = "");
+
+        IEnumerable<TEntity> GetPage(Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderby, int page, int pageSize);
+        Task<IEnumerable<TEntity>> GetPageAsync(Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderby, int page, int pageSize);
+
 
 
     }

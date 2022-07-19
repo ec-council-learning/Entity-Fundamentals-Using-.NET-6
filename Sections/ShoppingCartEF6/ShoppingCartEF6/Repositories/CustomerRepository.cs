@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using ShoppingBase.Base;
 using ShoppingCartEF2.Data;
 using ShoppingCartEF2.Entities;
@@ -143,10 +144,10 @@ namespace ShoppingCartEF4.Repositories
         //}
 
         // Count returning int as rows of Customers - Section 5 Video 2
-        public int Count()
-        {
-            return DbContext.Customers.Count();
-        }
+        //public int Count()
+        //{
+        //    return DbContext.Customers.Count();
+        //}
 
         public List<Customer> List(string firstName, string lastName)
         {
@@ -209,6 +210,72 @@ namespace ShoppingCartEF4.Repositories
             DbContext.Customers.RemoveRange(customers);
             Commit();
         }
+
+        public List<Customer> CustomersWhoBorrowedBookBasic(string bookName)
+        {
+            var parameters = new string[1];
+            var sqlParameters = new List<SqlParameter>();
+            parameters[0] = string.Format("@p{0}", 0);
+            sqlParameters.Add(new SqlParameter(parameters[0], bookName));
+
+            var rawCommand = string.Format(@"select * from ShoppingCartDev.Shopping.Customers where Customers.Id in(
+select customers.Id from ShoppingCartDev.Shopping.Customers, Shopping.CustomerBook, Shopping.LibaryBooks 
+where CustomerBook.CustomerId = CustomerBook.CustomerId and 
+CustomerBook.BookId = LibaryBooks.Id and
+LibaryBooks.Name = {0})", parameters[0]);
+
+            var dataset = DbContext.Customers
+               .FromSqlRaw(rawCommand, sqlParameters.ToArray())
+               .AsQueryable();
+
+            var results = dataset.ToList();
+            return results;
+
+        }
+        public List<Customer> CustomersWhoBorrowedBook(string bookName)
+        {
+            var parameters = new string[1];
+            var sqlParameters = new List<SqlParameter>();
+            parameters[0] = string.Format("@p{0}", 0);
+            sqlParameters.Add(new SqlParameter(parameters[0], bookName));
+
+            var rawCommand = string.Format(@"", parameters[0]);
+//            var rawCommand = string.Format(@"select * from ShoppingCartDev.Shopping.Customers where Customers.Id in(
+//select customers.Id from ShoppingCartDev.Shopping.Customers, Shopping.CustomerBook, Shopping.LibaryBooks 
+//where CustomerBook.CustomerId = CustomerBook.CustomerId and 
+//CustomerBook.BookId = LibaryBooks.Id and
+//LibaryBooks.Name = {0})", parameters[0]);
+            var dataset = DbContext.Customers
+               .FromSqlRaw(rawCommand, sqlParameters.ToArray())
+               .Where(w => w.CreditDays < 100)
+               .Include(i => i.Address)
+               .AsQueryable();
+
+            var results = dataset.ToList();
+            return results;
+
+        }
+//        public List<Customer> CustomersWhoBorrowedBookCustom(string bookName)
+//        {
+//            var parameters = new string[1];
+//            var sqlParameters = new List<SqlParameter>();
+//            parameters[0] = string.Format("@p{0}", 0);
+//            sqlParameters.Add(new SqlParameter(parameters[0], bookName));
+
+//            var rawCommand = string.Format(@"select * from ShoppingCartDev.Shopping.Customers where Customers.Id in(
+//select customers.Id from ShoppingCartDev.Shopping.Customers, Shopping.CustomerBook, Shopping.LibaryBooks 
+//where CustomerBook.CustomerId = CustomerBook.CustomerId and 
+//CustomerBook.BookId = LibaryBooks.Id and
+//LibaryBooks.Name = {0})", parameters[0]);
+
+//            var dataset = DbContext.Database.SqlQuery(rawCommand, sqlParameters.ToArray());
+//               .AsQueryable();
+
+//            var results = dataset.ToList();
+//            return results;
+
+//        }
+
     }
 }
 

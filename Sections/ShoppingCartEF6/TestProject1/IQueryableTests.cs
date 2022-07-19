@@ -38,7 +38,7 @@ namespace TestProject1
             var customerRepo = new CustomerRepository(context);
 
             var rowCount = customerRepo.Count();
-            for (int i = rowCount; i < rowCountDesired; i++)
+            for (long i = rowCount; i < rowCountDesired; i++)
             {
                 var firstName = "FirstName-" + DateTime.Now.ToString();
                 var lastName = "LastName" + DateTime.Now.ToString();
