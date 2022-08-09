@@ -84,7 +84,7 @@ namespace ShoppingCartEF4.Repositories
         public IEnumerable<Customer> Find(string firstName, string lastName)
         {
             var customers = base.Find(w => w.FirstName == firstName && w.LastName == lastName);
-            return customers;
+            return customers.AsEnumerable();
 
         }
 
